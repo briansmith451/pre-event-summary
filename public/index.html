@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIDE/GIDEx Pre-Event Summary</title>
+    <!-- Library for converting HTML to DOCX -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-docx@1.8.0/dist/html-to-docx.js"></script>
+    <style>
+        /* --- General Styles --- */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        .form-section {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        label {
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            width: 95%;
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px 30px 10px 10px; /* Added right padding for icon */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+        input.error, textarea.error {
+            border-color: #e74c3c;
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .dynamic-block {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #fdfdfd;
+            position: relative;
+        }
+        .add-control {
+            cursor: pointer;
+            color: #3498db;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .add-control:hover {
+            background-color: #eaf5fc;
+            text-decoration: none;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 24px;
+            line-height: 1;
+        }
+        .delete-btn:hover {
+            color: #c0392b;
+        }
+        .objective-title-line {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+        .objective-title-line label {
+            margin: 0;
+            width: auto;
+            flex-shrink: 0;
+        }
+        .objective-title-line input {
+            flex-grow: 1;
+        }
+        .step-inputs, .requirement-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .step-inputs .input-wrapper, .requirement-inputs .input-wrapper {
+            width: 100%;
+        }
+        .step-inputs .input-wrapper:first-child { width: 30%; }
+        .step-inputs .input-wrapper:last-child { width: 70%; }
+        .requirement-inputs .input-wrapper:first-child { width: 30%; }
+        .requirement-inputs .input-wrapper:last-child { width: 70%; }
+
+        .counter-container {
+            text-align: right;
+            font-size: 0.8em;
+            color: #777;
+            padding-right: 5px;
+        }
+        .button-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .action-button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+        .review-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        .review-btn:hover {
+            background-color: #2980b9;
+        }
+        .save-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        .save-btn:hover {
+            background-color: #229954;
+        }
+        .save-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .guidance {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        /* --- AI & Modal Styles --- */
+        .ai-icon {
+            position: absolute;
+            top: 10px;
+            right: 8px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            z-index: 2;
+            opacity: 0.7;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .ai-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .modal-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); display: none;
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 25px; border-radius: 8px;
+            width: 90%; max-width: 600px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+        .modal-content h3 { margin-top: 0; }
+        .ai-text-box {
+            border: 1px solid #ccc; border-radius: 4px; padding: 10px;
+            min-height: 100px; max-height: 200px; overflow-y: auto;
+            background-color: #f9f9f9; margin-bottom: 15px;
+        }
+        #ai-revised-text { background-color: #eaf5fc; }
+        .modal-buttons { margin-top: 20px; text-align: right; }
+        .modal-buttons button {
+            padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; margin-left: 10px;
+        }
+        .modal-confirm-btn { background-color: #e74c3c; color: white; }
+        .modal-cancel-btn { background-color: #bdc3c7; }
+        .ai-accept-btn { background-color: #27ae60; color: white; }
+        .ai-try-again-btn { background-color: #3498db; color: white; }
+        .ai-cancel-btn { background-color: #bdc3c7; }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid #3498db;
+            border-radius: 50%; width: 30px; height: 30px;
+            animation: spin 1s linear infinite; margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* --- Review Modal Styles --- */
+        #review-modal .modal-content, #alert-modal .modal-content { max-width: 700px; text-align: left; }
+        #review-list { max-height: 40vh; overflow-y: auto; }
+        .review-item { border-bottom: 1px solid #eee; padding: 10px 5px; }
+        .review-item-flex { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .review-text { flex-grow: 1; min-width: 0; }
+        .review-text .original { text-decoration: line-through; color: #e74c3c; }
+        .review-text .arrow { color: #27ae60; margin: 0 10px; }
+        .review-text .suggestion { color: #27ae60; font-weight: bold; }
+        .review-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .review-actions button {
+            font-size: 0.9em;
+            padding: 5px 10px;
+            text-align: center;
+        }
+        .acronym-input { padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 250px; }
+    </style>
+</head>
+<body>
+    <div id="form-container">
+        <h1>GIDE/GIDEx Pre-Event Summary</h1>
+        <div class="form-section">
+            <label for="event-title">Title of GIDE/GIDEx Event</label>
+            <div class="input-wrapper no-ai">
+                <input type="text" id="event-title" placeholder="e.g. GIDE-X: NGB Project Homeland - Data Integration for Domestic Operations">
+            </div>
+            <label for="date-range">Date Range</label>
+            <div class="input-wrapper no-ai">
+                <input type="text" id="date-range" placeholder="e.g. JUL-AUG 2025">
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>Overall Objectives</h2>
+            <p class="guidance">Enter a summary no greater than 60 words for the main goal.</p>
+            <div class="input-wrapper">
+                <textarea id="overall-objectives-main" data-limit="60" placeholder="e.g. To demonstrate the technical feasibility..."></textarea>
+            </div>
+            <div class="counter-container"><span class="word-counter">0 / 60 words</span></div>
+            <div id="objectives-container"></div>
+            <div class="add-control" onclick="addObjective()"><span>+</span> add another objective</div>
+        </div>
+        <div class="form-section">
+            <h2>Participants</h2>
+            <div class="input-wrapper">
+                <textarea id="participants" placeholder="e.g. NGB J3/J6, USNORTHCOM, JTF-SB..."></textarea>
+            </div>
+            <h2>GIDE Representatives</h2>
+            <div class="input-wrapper">
+                <textarea id="gide-reps" placeholder="e.g. Brian Smith (Lead), Marcus 'Spike' Wilson..."></textarea>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>Key Steps</h2>
+            <div id="steps-container"></div>
+            <div class="add-control" onclick="addStep()"><span>+</span> add another key step</div>
+        </div>
+        <div class="form-section">
+            <h2>Objectives and Key Outcomes</h2>
+            <div id="outcomes-container"></div>
+        </div>
+        <div class="form-section">
+            <h2>Leave-Behind Capability Delivery</h2>
+            <p class="guidance">Enter a summary no greater than 50 words.</p>
+            <div class="input-wrapper">
+                <textarea id="leave-behind" data-limit="50" placeholder="e.g. The primary leave-behind will be validated interoperability..."></textarea>
+            </div>
+            <div class="counter-container"><span class="word-counter">0 / 50 words</span></div>
+        </div>
+        <div class="form-section">
+            <h2>Next Steps</h2>
+            <div id="next-steps-container"></div>
+            <div class="add-control" onclick="addNextStep()"><span>+</span> add another next step</div>
+        </div>
+        <div class="form-section">
+            <h2>Requirements</h2>
+            <div id="requirements-container"></div>
+            <div class="add-control" onclick="addRequirement()"><span>+</span> add another requirement</div>
+        </div>
+        <div class="button-container">
+            <button id="review-btn" class="action-button review-btn" onclick="startPrintProcess()">Review Document</button>
+            <button id="save-btn" class="action-button save-btn" onclick="printToPdf()" disabled>Print to PDF</button>
+        </div>
+    </div>
+
+    <div id="custom-confirm-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <p id="confirm-modal-text" style="text-align: center;"></p>
+            <div class="modal-buttons" style="text-align: center;">
+                <button class="modal-cancel-btn" onclick="this.parentElement.parentElement.parentElement.style.display='none'">Cancel</button>
+                <button id="modal-confirm-btn" class="modal-confirm-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-enhancer-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3>AI Text Enhancer</h3>
+            <p><strong>Original Text:</strong></p>
+            <div id="ai-original-text" class="ai-text-box"></div>
+            <p><strong>AI Suggestion:</strong></p>
+            <div id="ai-revised-text" class="ai-text-box"><div class="loading-spinner"></div></div>
+            <div class="modal-buttons">
+                <button class="ai-cancel-btn" onclick="this.parentElement.parentElement.parentElement.style.display='none'">Cancel</button>
+                <button id="ai-try-again-btn" class="ai-try-again-btn">Try Another Suggestion</button>
+                <button id="ai-accept-btn" class="ai-accept-btn">Accept & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="review-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 id="review-title"></h3>
+            <div id="review-list"></div>
+            <div class="modal-buttons">
+                <button class="modal-cancel-btn" onclick="this.parentElement.parentElement.parentElement.style.display='none'">Cancel</button>
+                <button id="review-continue-btn" class="ai-accept-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="modal-backdrop">
+        <div class="modal-content" style="text-align: center;">
+            <h3 id="alert-title"></h3>
+            <p id="alert-text"></p>
+            <div class="modal-buttons" style="text-align: center;">
+                <button id="alert-ok-btn" class="ai-accept-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GLOBALS & DOM REFERENCES ---
+        let objectiveCount = 1;
+        const formContainer = document.getElementById('form-container');
+        const objectivesContainer = document.getElementById('objectives-container');
+        const outcomesContainer = document.getElementById('outcomes-container');
+        const stepsContainer = document.getElementById('steps-container');
+        const requirementsContainer = document.getElementById('requirements-container');
+        const nextStepsContainer = document.getElementById('next-steps-container');
+        const saveBtn = document.getElementById('save-btn');
+        const confirmModal = document.getElementById('custom-confirm-modal');
+        const confirmModalText = document.getElementById('confirm-modal-text');
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        let confirmCallback = null;
+        const aiModal = document.getElementById('ai-enhancer-modal');
+        const aiOriginalTextBox = document.getElementById('ai-original-text');
+        const aiRevisedTextBox = document.getElementById('ai-revised-text');
+        const aiAcceptBtn = document.getElementById('ai-accept-btn');
+        const aiTryAgainBtn = document.getElementById('ai-try-again-btn');
+        let activeAiInputElement = null;
+        let revisedText = '';
+        const reviewModal = document.getElementById('review-modal');
+        const reviewTitle = document.getElementById('review-title');
+        const reviewList = document.getElementById('review-list');
+        const reviewContinueBtn = document.getElementById('review-continue-btn');
+        const alertModal = document.getElementById('alert-modal');
+        const alertTitle = document.getElementById('alert-title');
+        const alertText = document.getElementById('alert-text');
+        const alertOkBtn = document.getElementById('alert-ok-btn');
+
+        // --- AI ENHANCEMENT LOGIC ---
+        const aiIconSvg = `<svg class="ai-icon" onclick="openAiEnhancer(this)" title="Enhance with AI" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.25a.75.75 0 01.75.75v3a.75.75 0 01-1.5 0v-3a.75.75 0 01.75-.75zM12 18a.75.75 0 01.75.75v3a.75.75 0 01-1.5 0v-3A.75.75 0 0112 18zM5.106 5.106a.75.75 0 011.06 0l2.122 2.121a.75.75 0 11-1.06 1.06L5.106 6.166a.75.75 0 010-1.06zM15.657 15.657a.75.75 0 011.06 0l2.121 2.121a.75.75 0 11-1.06 1.06l-2.121-2.12a.75.75 0 010-1.061zM3 12a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3A.75.75 0 013 12zM17.25 12a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3a.75.75 0 01-.75-.75zM6.166 15.657a.75.75 0 010 1.06l-2.121 2.121a.75.75 0 11-1.06-1.06l2.12-2.121a.75.75 0 011.061 0zM18.894 5.106a.75.75 0 010 1.06L16.773 8.293a.75.75 0 11-1.06-1.06l2.121-2.122a.75.75 0 011.06 0z" fill="url(#paint0_linear_1_2)"></path><defs><linearGradient id="paint0_linear_1_2" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#8E2DE2"></stop><stop offset="1" stop-color="#4A00E0"></stop></linearGradient></defs></svg>`;
+
+        function addAiIcons() {
+            document.querySelectorAll('.input-wrapper:not(.no-ai)').forEach(wrapper => {
+                if (!wrapper.querySelector('.ai-icon')) wrapper.insertAdjacentHTML('beforeend', aiIconSvg);
+            });
+        }
+
+        async function getAiSuggestion(isRetry = false) {
+            const originalText = aiOriginalTextBox.textContent;
+            const limit = activeAiInputElement.dataset.limit || 100;
+            
+            aiRevisedTextBox.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                const apiKey = "AIzaSyDsAj3TAFUwKnk7Wx8iweGyffeXEFqAA-o";
+                let prompt = `Revise and improve the following text for clarity, conciseness, and professionalism, without changing its core meaning. The revised text must not exceed ${limit} words. Original text: "${originalText}"`;
+                if (isRetry) {
+                    prompt = `Provide a different version. Revise and improve the following text for clarity, conciseness, and professionalism, without changing its core meaning. The revised text must not exceed ${limit} words. Original text: "${originalText}"`
+                }
+                
+                const response = await callGeminiAPI(prompt);
+
+                revisedText = response;
+                const words = revisedText.trim().split(/\s+/);
+                if (words.length > limit) {
+                    revisedText = words.slice(0, limit).join(' ');
+                }
+                aiRevisedTextBox.textContent = revisedText;
+
+            } catch (error) {
+                console.error("AI Enhancement Error:", error);
+                aiRevisedTextBox.textContent = "Sorry, an error occurred while enhancing the text. Ensure your API key is correct.";
+            }
+        }
+
+        function openAiEnhancer(iconElement) {
+            activeAiInputElement = iconElement.parentElement.querySelector('textarea, input[type="text"]');
+            const originalText = activeAiInputElement.value;
+
+            if (!originalText.trim()) {
+                showAlert("Input Required", "Please enter some text before using the AI enhancer.");
+                return;
+            }
+
+            aiOriginalTextBox.textContent = originalText;
+            aiModal.style.display = 'flex';
+            getAiSuggestion(false);
+        }
+
+        aiAcceptBtn.addEventListener('click', () => {
+            if (activeAiInputElement && revisedText) {
+                activeAiInputElement.value = revisedText;
+                activeAiInputElement.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            aiModal.style.display = 'none';
+        });
+        aiTryAgainBtn.addEventListener('click', () => getAiSuggestion(true));
+
+        // --- PRINTING & REVIEW PROCESS ---
+        function startPrintProcess() {
+            if (!validateForm()) return;
+            startAcronymCheck();
+        }
+
+        function validateForm() {
+            let firstErrorElement = null;
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                el.classList.remove('error');
+                if (!el.value.trim()) {
+                    if (!firstErrorElement) {
+                        firstErrorElement = el;
+                    }
+                    el.classList.add('error');
+                }
+            });
+
+            if (firstErrorElement) {
+                showAlert('Empty Fields', 'All fields are required. Please fill in the highlighted field(s).');
+                firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstErrorElement.focus();
+                return false;
+            }
+            return true;
+        }
+        
+        async function startAcronymCheck() {
+            reviewTitle.textContent = "Acronym Review";
+            reviewList.innerHTML = '<div class="loading-spinner"></div>';
+            reviewModal.style.display = 'flex';
+
+            let allText = [];
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                if (el.value.trim()) allText.push(el.value);
+            });
+
+            if (allText.length === 0) {
+                reviewList.innerHTML = '<p>No text found to check for acronyms.</p>';
+                reviewContinueBtn.onclick = () => { reviewModal.style.display = 'none'; startSpellCheck(); };
+                return;
+            }
+
+            try {
+                const prompt = `Review the following Department of Defense related text and identify any acronyms that are NOT immediately followed by their definition in parentheses. For example, in "Maven Smart System (MSS)", MSS is already defined and should be ignored. Do not include common acronyms like DoD, US, etc. Provide the results as a JSON array of strings. If no undefined acronyms are found, return an empty array. Text to review: ${allText.join('\n\n')}`;
+                
+                const response = await callGeminiAPI(prompt, true);
+                const acronyms = JSON.parse(response);
+
+                if (acronyms.length === 0) {
+                    reviewList.innerHTML = '<p>No undefined acronyms found.</p>';
+                } else {
+                    displayAcronyms(acronyms);
+                }
+                reviewContinueBtn.onclick = () => { processAcronymsAndContinue(); };
+            } catch (error) {
+                console.error("Acronym Check Error:", error);
+                reviewList.innerHTML = '<p>Sorry, an error occurred while checking for acronyms. You can continue to the next step.</p>';
+                reviewContinueBtn.onclick = () => { reviewModal.style.display = 'none'; startSpellCheck(); };
+            }
+        }
+
+        function displayAcronyms(acronyms) {
+            reviewList.innerHTML = '';
+            acronyms.forEach(acronym => {
+                const div = document.createElement('div');
+                div.className = 'review-item';
+                div.innerHTML = `
+                    <div class="review-item-flex">
+                        <strong class="review-text">${acronym}</strong>
+                        <input type="text" class="acronym-input" data-acronym="${acronym}" placeholder="Enter full definition...">
+                        <button class="modal-cancel-btn" onclick="this.parentElement.parentElement.style.display='none'">Do Not Define</button>
+                    </div>
+                `;
+                reviewList.appendChild(div);
+            });
+        }
+
+        function processAcronymsAndContinue() {
+            let definedAcronyms = new Set();
+            const inputs = reviewList.querySelectorAll('.acronym-input');
+            
+            document.querySelectorAll('input[type="text"], textarea').forEach(field => {
+                inputs.forEach(input => {
+                    const acronym = input.dataset.acronym;
+                    const definition = input.value.trim();
+                    if (definition && !definedAcronyms.has(acronym)) {
+                        const regex = new RegExp(`\\b${acronym}\\b`);
+                        if (field.value.match(regex)) {
+                            field.value = field.value.replace(regex, `${acronym} (${definition})`);
+                            definedAcronyms.add(acronym);
+                        }
+                    }
+                });
+            });
+            
+            reviewModal.style.display = 'none';
+            startSpellCheck();
+        }
+
+        async function startSpellCheck() {
+            reviewTitle.textContent = "Spelling & Grammar Review";
+            reviewList.innerHTML = '<div class="loading-spinner"></div>';
+            reviewModal.style.display = 'flex';
+
+            let allText = [];
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                if (el.value.trim()) allText.push(el.value);
+            });
+
+            if (allText.length === 0) {
+                reviewList.innerHTML = '<p>No text found to check.</p>';
+                reviewContinueBtn.onclick = () => { completeReviewProcess(); };
+                return;
+            }
+
+            try {
+                const prompt = `Please act as a proofreader. Review the following text for spelling and grammar errors. Identify only clear spelling and grammatical errors. Do not suggest changes for stylistic preferences or for correctly used possessives (e.g., 'NGB's'). Provide suggestions as a JSON array of objects, where each object has "original" and "suggestion" keys, and only if the suggestion is different from the original word or phrase. If no errors are found, return an empty array. Text to review: ${allText.join('\n\n')}`;
+                
+                const response = await callGeminiAPI(prompt, true);
+                const suggestions = JSON.parse(response);
+
+                if (suggestions.length === 0) {
+                    reviewList.innerHTML = '<p>No spelling or grammar suggestions found.</p>';
+                } else {
+                    displaySuggestions(suggestions);
+                }
+                reviewContinueBtn.onclick = () => { completeReviewProcess(); };
+            } catch (error) {
+                console.error("Spellcheck Error:", error);
+                reviewList.innerHTML = '<p>Sorry, an error occurred while checking the text. You can continue to save.</p>';
+                reviewContinueBtn.onclick = () => { completeReviewProcess(); };
+            }
+        }
+        
+        function completeReviewProcess() {
+            reviewModal.style.display = 'none';
+            saveBtn.disabled = false;
+            showAlert("Review Complete", "The document has been reviewed. You can now save it as a Word Document.");
+        }
+
+        function displaySuggestions(suggestions) {
+            reviewList.innerHTML = '';
+            suggestions.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'review-item';
+                div.innerHTML = `
+                    <div class="review-item-flex">
+                        <div class="review-text">
+                            <span class="original">${item.original}</span>
+                            <span class="arrow">→</span>
+                            <span class="suggestion">${item.suggestion}</span>
+                        </div>
+                        <div class="review-actions">
+                            <button class="modal-cancel-btn" onclick="this.parentElement.parentElement.parentElement.style.display='none'">Decline</button>
+                            <button class="ai-accept-btn" onclick="applySuggestion('${index}')">Accept</button>
+                        </div>
+                    </div>
+                `;
+                div.dataset.original = item.original;
+                div.dataset.suggestion = item.suggestion;
+                reviewList.appendChild(div);
+            });
+        }
+
+        function applySuggestion(index) {
+            const item = reviewList.children[index];
+            const original = item.dataset.original;
+            const suggestion = item.dataset.suggestion;
+
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                if (el.value.includes(original)) {
+                    el.value = el.value.replace(original, suggestion);
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+            item.style.display = 'none';
+        }
+
+        // --- GENERIC GEMINI API CALLER ---
+        async function callGeminiAPI(prompt, jsonMode = false) {
+            const apiKey = "AIzaSyDsAj3TAFUwKnk7Wx8iweGyffeXEFqAA-o";
+            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            
+            if (jsonMode) {
+                payload.generationConfig = { responseMimeType: "application/json" };
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+            
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates.length > 0) {
+                return result.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error("No response received from AI.");
+            }
+        }
+
+        // --- CUSTOM MODAL LOGIC ---
+        function showConfirm(text, callback) {
+            confirmModalText.textContent = text;
+            confirmCallback = callback;
+            confirmModal.style.display = 'flex';
+        }
+        confirmBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); confirmModal.style.display = 'none'; });
+        document.querySelector('#custom-confirm-modal .modal-cancel-btn').addEventListener('click', () => { confirmCallback = null; confirmModal.style.display = 'none'; });
+
+        function showAlert(title, text) {
+            alertTitle.textContent = title;
+            alertText.textContent = text;
+            alertModal.style.display = 'flex';
+        }
+        alertOkBtn.addEventListener('click', () => { alertModal.style.display = 'none'; });
+
+
+        // --- WORD DOCUMENT GENERATION ---
+        async function generateAndSaveAsWord() {
+            if (typeof htmlToDocx === 'undefined') {
+                showAlert("Error", "The document generation library is not ready. Please wait a moment and try again.");
+                return;
+            }
+            try {
+                const title = document.getElementById('event-title').value;
+                const dateRange = document.getElementById('date-range').value;
+                const overallObj = document.getElementById('overall-objectives-main').value;
+                const participants = document.getElementById('participants').value;
+                const gideReps = document.getElementById('gide-reps').value;
+                const leaveBehind = document.getElementById('leave-behind').value;
+                
+                let reportHTML = `
+                    <div style="text-align: center;"><h1>${title}</h1><h3>Pre-Event Summary</h3><h3 style="font-weight: normal;">${dateRange}</h3></div>
+                    <h2>1. Overall Objectives: <span style="font-weight: normal;">${overallObj}</span></h2>`;
+                objectivesContainer.querySelectorAll('.dynamic-block').forEach((obj) => { reportHTML += `<p style="margin-left: 20px;"><b>${obj.querySelector('input').value || 'Untitled Objective'}:</b> ${obj.querySelector('textarea').value}</p>`; });
+                reportHTML += `<h2>2. Participants:</h2><p>${participants.replace(/\n/g, '<br>')}</p>`;
+                reportHTML += `<h2>3. GIDE Representatives:</h2><p>${gideReps.replace(/\n/g, '<br>')}</p>`;
+                reportHTML += `<h2>4. Key Steps:</h2>`;
+                stepsContainer.querySelectorAll('.dynamic-block').forEach(step => { reportHTML += `<p style="margin-left: 20px;"><b>${step.querySelector('input').value || 'Untitled Step'}:</b> ${step.querySelector('textarea').value}</p>`; });
+                reportHTML += `<h2>5. Objectives and Key Outcomes:</h2>`;
+                outcomesContainer.querySelectorAll('.dynamic-block').forEach(outcome => { reportHTML += `<p style="margin-left: 20px;"><b>${outcome.querySelector('label').textContent}:</b> ${outcome.querySelector('textarea').value}</p>`; });
+                reportHTML += `<h2>6. Leave-Behind Capability Delivery:</h2><p>${leaveBehind.replace(/\n/g, '<br>')}</p>`;
+                reportHTML += `<h2>7. Next Steps:</h2>`;
+                nextStepsContainer.querySelectorAll('.dynamic-block').forEach(step => { reportHTML += `<p style="margin-left: 20px;">- ${step.querySelector('textarea').value}</p>`; });
+                reportHTML += `<h2>8. Requirements:</h2>`;
+                requirementsContainer.querySelectorAll('.dynamic-block').forEach(req => { reportHTML += `<p style="margin-left: 20px;"><b>${req.querySelector('input').value || 'Untitled Requirement'}:</b> ${req.querySelector('textarea').value}</p>`; });
+
+                const blob = await window.htmlToDocx.asBlob(reportHTML);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${title || 'GIDE-Pre-Event-Summary'}.docx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error("Error generating Word document:", error);
+                showAlert("Error", "There was a problem generating the Word document.");
+            }
+        }
+
+        // --- PRINT DOCUMENT FUNCTION (MODIFIED) ---
+        function printToPdf() {
+            // 1. Gather all the data from the form
+            const title = document.getElementById('event-title').value;
+            const dateRange = document.getElementById('date-range').value;
+            const overallObjMain = document.getElementById('overall-objectives-main').value;
+            const participants = document.getElementById('participants').value;
+            const gideReps = document.getElementById('gide-reps').value;
+            const leaveBehind = document.getElementById('leave-behind').value;
+
+            let objectivesHtml = '';
+            document.querySelectorAll('#objectives-container .dynamic-block').forEach((objBlock, index) => {
+                const objTitle = objBlock.querySelector('input[type="text"]').value || `Objective ${index + 1}`;
+                const objSummary = objBlock.querySelector('textarea').value;
+                // Sanitize HTML content
+                const sanitizedSummary = objSummary.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+                objectivesHtml += `<div class="indented">
+                                       <p><strong>${objTitle.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ${sanitizedSummary}</p>
+                                   </div>`;
+            });
+
+            let stepsHtml = '';
+            document.querySelectorAll('#steps-container .dynamic-block').forEach(stepBlock => {
+                const stepTitle = stepBlock.querySelector('input[type="text"]').value;
+                const stepSummary = stepBlock.querySelector('textarea').value;
+                stepsHtml += `<div class="indented">
+                                  <p><strong>${stepTitle.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ${stepSummary.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</p>
+                              </div>`;
+            });
+
+            let outcomesHtml = '';
+            document.querySelectorAll('#outcomes-container .dynamic-block').forEach(outcomeBlock => {
+                const outcomeLabel = outcomeBlock.querySelector('label').textContent;
+                const outcomeSummary = outcomeBlock.querySelector('textarea').value;
+                outcomesHtml += `<div class="indented">
+                                    <p><strong>${outcomeLabel.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ${outcomeSummary.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</p>
+                                 </div>`;
+            });
+
+            let nextStepsHtml = '';
+            document.querySelectorAll('#next-steps-container .dynamic-block').forEach(stepBlock => {
+                const stepSummary = stepBlock.querySelector('textarea').value;
+                nextStepsHtml += `<div class="indented"><p>${stepSummary.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</p></div>`;
+            });
+
+            let requirementsHtml = '';
+            document.querySelectorAll('#requirements-container .dynamic-block').forEach(reqBlock => {
+                const reqTitle = reqBlock.querySelector('input[type="text"]').value;
+                const reqSummary = reqBlock.querySelector('textarea').value;
+                requirementsHtml += `<div class="indented">
+                                        <p><strong>${reqTitle.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ${reqSummary.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</p>
+                                     </div>`;
+            });
+
+            // 2. Construct the HTML for printing
+            const printableContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>GIDE/GIDEx Pre-Event Summary</title>
+                    <style>
+                        body {
+                            font-family: 'Times New Roman', Times, serif;
+                            font-size: 10pt;
+                            text-align: left;
+                            margin: 40px;
+                        }
+                        .title {
+                            font-size: 12pt;
+                            text-align: center;
+                            font-weight: bold;
+                            margin-bottom: 0;
+                        }
+                        .date-range {
+                            text-align: center;
+                            font-size: 10pt;
+                            margin-bottom: 2em;
+                        }
+                        h2 {
+                            font-size: 10pt;
+                            font-weight: bold;
+                            margin-top: 1.5em;
+                            margin-bottom: 0.5em;
+                        }
+                        p, div {
+                            margin: 0;
+                            padding: 0;
+                            line-height: 1.4;
+                        }
+                        .content {
+                           margin-bottom: 1em;
+                        }
+                        .indented {
+                            margin-left: 40px;
+                            margin-bottom: 0.75em;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="title">${title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+                    <div class="date-range">${dateRange.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+
+                    <h2>Overall Objectives: <span style="font-weight: normal;">${overallObjMain.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</span></h2>
+                    ${objectivesHtml}
+
+                    <h2>Participants</h2>
+                    <div class="content">${participants.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</div>
+
+                    <h2>GIDE Representatives</h2>
+                    <div class="content">${gideReps.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</div>
+
+                    <h2>Key Steps</h2>
+                    ${stepsHtml}
+
+                    <h2>Objectives and Key Outcomes</h2>
+                    ${outcomesHtml}
+
+                    <h2>Leave-Behind Capability Delivery</h2>
+                    <div class="content">${leaveBehind.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</div>
+
+                    <h2>Next Steps</h2>
+                    ${nextStepsHtml}
+
+                    <h2>Requirements</h2>
+                    ${requirementsHtml}
+                </body>
+                </html>
+            `;
+
+            // 3. Print the content in a new window
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printableContent);
+            printWindow.document.close();
+            printWindow.focus();
+            // Use a timeout to ensure content is fully rendered before printing
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
+
+        // --- DYNAMIC EVENT LISTENERS & WORD COUNT ---
+        formContainer.addEventListener('input', e => {
+            if (e.target.matches('textarea[data-limit]')) handleWordCount(e.target);
+            if (e.target.matches('#objectives-container .dynamic-block input[type="text"]')) updateOutcomeLabel(e.target);
+            if (e.target.matches('.error')) e.target.classList.remove('error');
+            saveData();
+            saveBtn.disabled = true; // Disable save button on any change
+        });
+
+        function handleWordCount(textarea) {
+            const limit = parseInt(textarea.dataset.limit, 10);
+            const counterSpan = textarea.closest('.dynamic-block, .form-section').querySelector('.word-counter');
+            let text = textarea.value;
+            let words = text.trim() === '' ? [] : text.trim().split(/\s+/);
+            if (words.length > limit) {
+                textarea.value = words.slice(0, limit).join(' ');
+                words = words.slice(0, limit);
+            }
+            if(counterSpan) {
+                counterSpan.textContent = `${words.length} / ${limit} words`;
+                counterSpan.style.color = words.length >= limit ? '#e74c3c' : '#777';
+            }
+        }
+        
+        // --- DYNAMIC ELEMENT CREATION & REMOVAL ---
+        function updateOutcomeLabel(inputElement) {
+            const block = inputElement.closest('.dynamic-block');
+            const index = Array.from(objectivesContainer.children).indexOf(block);
+            if (index < 0) return;
+            const outcomeLabel = outcomesContainer.children[index].querySelector('label');
+            const title = inputElement.value.trim();
+            outcomeLabel.textContent = title ? `Objective ${index + 1} - ${title}` : `Objective ${index + 1}`;
+        }
+
+        function addObjective(title = '', summary = '', outcomeSummary = '') {
+            let newObjective = document.createElement('div');
+            newObjective.className = 'dynamic-block objective-block';
+            newObjective.innerHTML = `<span class="delete-btn" onclick="removeObjective(this)" title="Delete Objective">×</span><div class="objective-title-line"><label>Objective ${objectiveCount}</label><span>-</span><div class="input-wrapper no-ai"><input type="text" placeholder="Enter title here..." value="${title}"></div></div><p class="guidance">Enter a summary no greater than 30 words.</p><div class="input-wrapper"><textarea data-limit="30" placeholder="e.g. Describe objective...">${summary}</textarea></div><div class="counter-container"><span class="word-counter">0 / 30 words</span></div>`;
+            objectivesContainer.appendChild(newObjective);
+            
+            let newOutcome = document.createElement('div');
+            newOutcome.className = 'dynamic-block';
+            newOutcome.innerHTML = `<label>Objective ${objectiveCount}</label><p class="guidance">Enter a summary no greater than 40 words.</p><div class="input-wrapper"><textarea data-limit="40" placeholder="e.g. Describe the key outcome...">${outcomeSummary}</textarea></div><div class="counter-container"><span class="word-counter">0 / 40 words</span></div>`;
+            outcomesContainer.appendChild(newOutcome);
+            
+            addAiIcons();
+            handleWordCount(newObjective.querySelector('textarea'));
+            handleWordCount(newOutcome.querySelector('textarea'));
+            updateOutcomeLabel(newObjective.querySelector('input'));
+            objectiveCount++;
+            saveData();
+        }
+
+        function removeObjective(btn) {
+            const block = btn.closest('.dynamic-block');
+            const index = Array.from(objectivesContainer.children).indexOf(block);
+            const hasText = block.querySelector('input').value.trim() !== '' || block.querySelector('textarea').value.trim() !== '' || outcomesContainer.children[index].querySelector('textarea').value.trim() !== '';
+            
+            const deletionTask = () => {
+                block.remove();
+                outcomesContainer.children[index].remove();
+                renumberObjectives();
+                saveData();
+            };
+
+            if (hasText) showConfirm('Are you sure you want to delete this objective? It contains text.', deletionTask);
+            else deletionTask();
+        }
+
+        function renumberObjectives() {
+            const objectives = Array.from(objectivesContainer.children);
+            let currentCount = 1;
+            objectives.forEach(obj => {
+                obj.querySelector('.objective-title-line label').textContent = `Objective ${currentCount}`;
+                updateOutcomeLabel(obj.querySelector('input'));
+                currentCount++;
+            });
+            objectiveCount = currentCount;
+        }
+
+        function addStep(title = '', summary = '') {
+            let newStep = document.createElement('div');
+            newStep.className = 'dynamic-block step-block';
+            newStep.innerHTML = `<span class="delete-btn" onclick="removeStep(this)" title="Delete Step">×</span><div class="step-inputs"><div class="input-wrapper no-ai"><input type="text" placeholder="e.g. New Step Title" value="${title}"></div><div class="input-wrapper"><textarea data-limit="20" placeholder="e.g. Summary for the new step...">${summary}</textarea></div></div><div class="counter-container"><span class="word-counter">0 / 20 words</span></div>`;
+            stepsContainer.appendChild(newStep);
+            addAiIcons();
+            handleWordCount(newStep.querySelector('textarea'));
+            saveData();
+        }
+
+        function removeStep(btn) {
+            const block = btn.closest('.dynamic-block');
+            const hasText = block.querySelector('input').value.trim() !== '' || block.querySelector('textarea').value.trim() !== '';
+            if (hasText) showConfirm('Are you sure you want to delete this key step? It contains text.', () => { block.remove(); saveData(); });
+            else { block.remove(); saveData(); }
+        }
+
+        function addNextStep(summary = '') {
+            let newStep = document.createElement('div');
+            newStep.className = 'dynamic-block';
+            newStep.innerHTML = `<span class="delete-btn" onclick="removeNextStep(this)" title="Delete Step">×</span><p class="guidance">Enter a summary no greater than 30 words.</p><div class="input-wrapper"><textarea data-limit="30" placeholder="e.g. Describe next step...">${summary}</textarea></div><div class="counter-container"><span class="word-counter">0 / 30 words</span></div>`;
+            nextStepsContainer.appendChild(newStep);
+            addAiIcons();
+            handleWordCount(newStep.querySelector('textarea'));
+            saveData();
+        }
+
+        function removeNextStep(btn) {
+            const block = btn.closest('.dynamic-block');
+            const hasText = block.querySelector('textarea').value.trim() !== '';
+            if (hasText) showConfirm('Are you sure you want to delete this next step? It contains text.', () => { block.remove(); saveData(); });
+            else { block.remove(); saveData(); }
+        }
+
+        function addRequirement(title = '', summary = '') {
+            let newReq = document.createElement('div');
+            newReq.className = 'dynamic-block requirement-block';
+            newReq.innerHTML = `<span class="delete-btn" onclick="removeRequirement(this)" title="Delete Requirement">×</span><div class="requirement-inputs"><div class="input-wrapper no-ai"><input type="text" placeholder="e.g. New Requirement Title" value="${title}"></div><div class="input-wrapper"><textarea data-limit="20" placeholder="e.g. Summary for the new requirement...">${summary}</textarea></div></div><div class="counter-container"><span class="word-counter">0 / 20 words</span></div>`;
+            requirementsContainer.appendChild(newReq);
+            addAiIcons();
+            handleWordCount(newReq.querySelector('textarea'));
+            saveData();
+        }
+
+        function removeRequirement(btn) {
+            const block = btn.closest('.dynamic-block');
+            const hasText = block.querySelector('input').value.trim() !== '' || block.querySelector('textarea').value.trim() !== '';
+            if (hasText) showConfirm('Are you sure you want to delete this requirement? It contains text.', () => { block.remove(); saveData(); });
+            else { block.remove(); saveData(); }
+        }
+
+        // --- DATA PERSISTENCE (LOCAL STORAGE) ---
+        function saveData() {
+            const data = {
+                eventTitle: document.getElementById('event-title').value,
+                dateRange: document.getElementById('date-range').value,
+                overallObjectives: document.getElementById('overall-objectives-main').value,
+                participants: document.getElementById('participants').value,
+                gideReps: document.getElementById('gide-reps').value,
+                leaveBehind: document.getElementById('leave-behind').value,
+                objectives: Array.from(objectivesContainer.children).map(obj => ({ title: obj.querySelector('input').value, summary: obj.querySelector('textarea').value })),
+                outcomes: Array.from(outcomesContainer.children).map(out => out.querySelector('textarea').value),
+                steps: Array.from(stepsContainer.children).map(step => ({ title: step.querySelector('input').value, summary: step.querySelector('textarea').value })),
+                nextSteps: Array.from(nextStepsContainer.children).map(step => step.querySelector('textarea').value),
+                requirements: Array.from(requirementsContainer.children).map(req => ({ title: req.querySelector('input').value, summary: req.querySelector('textarea').value }))
+            };
+            localStorage.setItem('gidePreEventFormData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('gidePreEventFormData'));
+            if (!data) {
+                addObjective(); addStep(); addNextStep(); addRequirement();
+                return;
+            }
+            document.getElementById('event-title').value = data.eventTitle || '';
+            document.getElementById('date-range').value = data.dateRange || '';
+            document.getElementById('overall-objectives-main').value = data.overallObjectives || '';
+            document.getElementById('participants').value = data.participants || '';
+            document.getElementById('gide-reps').value = data.gideReps || '';
+            document.getElementById('leave-behind').value = data.leaveBehind || '';
+            
+            handleWordCount(document.getElementById('overall-objectives-main'));
+            handleWordCount(document.getElementById('leave-behind'));
+
+            objectivesContainer.innerHTML = ''; outcomesContainer.innerHTML = '';
+            if (data.objectives && data.objectives.length > 0) data.objectives.forEach((obj, index) => addObjective(obj.title, obj.summary, data.outcomes[index] || ''));
+            else addObjective();
+
+            stepsContainer.innerHTML = '';
+            if (data.steps && data.steps.length > 0) data.steps.forEach(step => addStep(step.title, step.summary));
+            else addStep();
+
+            nextStepsContainer.innerHTML = '';
+            if (data.nextSteps && data.nextSteps.length > 0) data.nextSteps.forEach(summary => addNextStep(summary));
+            else addNextStep();
+
+            requirementsContainer.innerHTML = '';
+            if (data.requirements && data.requirements.length > 0) data.requirements.forEach(req => addRequirement(req.title, req.summary));
+            else addRequirement();
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            addAiIcons();
+        });
+
+    </script>
+</body>
+</html>
